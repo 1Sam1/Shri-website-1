@@ -1,10 +1,10 @@
-/* Color scheme same as your login page */
+/* Color scheme same as login page */
 :root {
-    --primary-color: #1f2937; /* dark gray */
-    --secondary-color: #3b82f6; /* blue */
-    --bg-color: #f3f4f6; /* light gray */
-    --text-color: #111827; /* dark text */
-    --footer-color: #111827;
+    --primary-color: #1e293b; /* sidebar, header, footer */
+    --secondary-color: #3b82f6; /* accent / hover */
+    --bg-color: #f8fafc; /* page background */
+    --text-color: #111827; /* main text */
+    --footer-color: #1e293b;
 }
 
 body {
@@ -32,6 +32,7 @@ body {
     color: #fff;
     text-align: center;
     margin-bottom: 30px;
+    font-size: 1.8rem;
 }
 
 .sidebar a {
@@ -43,7 +44,7 @@ body {
     transition: 0.2s;
 }
 
-.sidebar a:hover {
+.sidebar a:hover, .sidebar a.active {
     background-color: var(--secondary-color);
     color: #fff;
 }
@@ -102,7 +103,7 @@ footer {
     color: #fff;
     text-align: center;
     padding: 15px 0;
-    margin-top: auto; /* pushes footer to bottom */
+    margin-top: auto;
     border-top: 1px solid #333;
 }
 
