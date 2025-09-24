@@ -154,12 +154,12 @@ section h2 {
 
 /* Footer */
 footer {
-  background: #2C2C2C;
+  background: linear-gradient(to right, #FF512F, #F09819);
   color: #fff;
   text-align: center;
   padding: 20px 0;
   margin-top: 40px;
-}
+  }
 
 /* Responsive */
 @media(max-width: 768px) {
