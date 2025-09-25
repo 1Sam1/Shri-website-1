@@ -3,37 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHRI - About Us</title>
+  <title>SHRI — About Us</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div id="sidebar" class="sidebar">
-    <h2>SHRI</h2>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="services.html">Services</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="https://1sam1.github.io/login-page/">My Account</a>
-  </div>
+  <!-- Header -->
+  <header>
+    <div class="container header-container">
+      <h1 class="logo">SHRI</h1>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html" class="active">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="https://1sam1.github.io/login-page/">My Account</a></li>
+        </ul>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-  <div id="content">
-    <header>
-      <button id="menu-btn">&#9776;</button>
-      <h1>About SHRI</h1>
-    </header>
+  <!-- Hero / Banner Section -->
+  <section class="hero small-hero">
+    <div class="container">
+      <h2>About SHRI</h2>
+      <p>Committed to providing quality manpower across Mumbai and beyond.</p>
+    </div>
+  </section>
 
-    <main>
-      <div class="container">
-        <h2>About Us</h2>
-        <p>Founded with the goal of providing dependable manpower solutions, SHRI specializes in supplying trained staff to caterers, hotels, and service industries in Mumbai. We aim to connect businesses with trustworthy workers and ensure smooth operations at all times.</p>
-      </div>
-    </main>
+  <!-- About Content Section -->
+  <section class="about">
+    <div class="container">
+      <h2>Our Story</h2>
+      <p>
+        SHRI was founded with a mission to bridge the gap between businesses and reliable, skilled manpower. We operate in Mumbai with a focus on hospitality, catering, events, and related industries.
+      </p>
+      <p>
+        Over the years, we have supplied trained professionals for hotels, wedding caterers, event planners, and more. Our team is selected carefully, trained thoroughly, and managed diligently to ensure your operations run smoothly.
+      </p>
+      <h3>Why Choose SHRI?</h3>
+      <ul>
+        <li>Highly trained and trustworthy staff</li>
+        <li>Flexible contracts—temporary or permanent</li>
+        <li>On-site supervision and performance tracking</li>
+        <li>Quick deployment and responsive support</li>
+      </ul>
+    </div>
+  </section>
 
-    <footer>
-      <p>&copy; 2025 SHRI. All rights reserved.</p>
-    </footer>
-  </div>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 SHRI. All Rights Reserved.</p>
+    </div>
+  </footer>
 
   <script src="js/script.js"></script>
 </body>
