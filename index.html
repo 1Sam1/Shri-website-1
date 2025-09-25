@@ -3,75 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHRI — Home</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>SHRI — Coming Soon</title>
   <style>
-    header {
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px 20px;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
       background: linear-gradient(to right, #ff512f, #f09819); /* rising sun */
-      position: relative;
+      color: white;
+      text-align: center;
     }
     .logo img {
-      height: 50px;
+      height: 80px;
+      margin-bottom: 20px;
     }
-    .hamburger {
+    h1 {
+      font-size: 2.5rem;
+      margin: 10px 0;
+    }
+    p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    footer {
       position: absolute;
-      right: 20px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 25px;
-      height: 20px;
-    }
-    .hamburger span {
-      display: block;
-      height: 3px;
-      background: white;
-      border-radius: 2px;
-    }
-    nav ul {
-      display: none; /* hidden, will show when hamburger is clicked */
+      bottom: 15px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
-  <header>
-    <!-- Menu Button -->
-    <div class="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-    <!-- Centered Logo -->
-    <a href="index.html" class="logo">
-      <img src="images/shriapp.png" alt="SHRI Logo">
-    </a>
-  </header>
-
-  <!-- About Section -->
-  <section class="about">
-    <div class="container">
-      <h2>Who We Are</h2>
-      <p>We specialize in providing reliable, trained manpower for catering, hospitality, and events.</p>
-    </div>
-  </section>
-
-  <!-- Footer -->
+  <div class="logo">
+    <img src="images/shriapp.png" alt="SHRI Logo">
+  </div>
+  <h1>Coming Soon</h1>
+  <p>Our website is under construction. Stay tuned!</p>
   <footer>
-    <div class="container">
-      <p>&copy; 2025 SHRI. All Rights Reserved.</p>
-    </div>
+    &copy; 2025 SHRI. All Rights Reserved.
   </footer>
-
-  <script>
-    function toggleMenu() {
-      alert("Here we will open the sidebar menu.");
-      // Later you can add sidebar code here
-    }
-  </script>
 </body>
 </html>
