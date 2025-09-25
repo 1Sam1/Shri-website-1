@@ -3,56 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHRI — Home</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>About - SHRI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: linear-gradient(to right, #ff512f, #f09819); /* rising sun theme */
+    }
+    .logo {
+      height: 50px;
+      margin: 0 auto; /* centers logo */
+    }
+    .menu-btn {
+      font-size: 24px;
+      cursor: pointer;
+      color: white;
+      position: absolute;
+      left: 20px; /* keep menu on the left */
+    }
+    .header img {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <a href="index.html">Home</a>
+    <a href="about.html" class="active">About</a>
+    <a href="services.html">Services</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="https://1sam1.github.io/login-page/">My Account</a>
+  </div>
 
   <!-- Header -->
-  <header>
-    <div class="container header-container">
-      <a href="index.html" class="logo">
-        <img src="images/shriapp.png" alt="SHRI Logo" style="height:50px;">
-      </a>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="https://1sam1.github.io/login-page/">My Account</a></li>
-        </ul>
-        <div class="hamburger">
-          <span></span><span></span><span></span>
-        </div>
-      </nav>
-    </div>
+  <header class="header">
+    <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+    <img src="images/shriapp.png" alt="SHRI Logo" class="logo">
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Welcome to SHRI</h1>
-      <p>Your trusted partner in manpower services across Mumbai.</p>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section class="about">
-    <div class="container">
-      <h2>Who We Are</h2>
-      <p>We specialize in providing reliable, trained manpower for catering, hospitality, and events.</p>
-    </div>
-  </section>
+  <!-- Main Content -->
+  <main>
+    <section class="hero">
+      <h1>About SHRI</h1>
+      <p>
+        At SHRI, we provide trusted manpower services to caterers and event organizers in Mumbai. 
+        Our goal is to ensure reliable, skilled, and professional support staff for every occasion.
+      </p>
+      <p>
+        With years of experience, SHRI has built a reputation for commitment, trust, and excellence 
+        in manpower solutions.
+      </p>
+    </section>
+  </main>
 
   <!-- Footer -->
   <footer>
-    <div class="container">
-      <p>&copy; 2025 SHRI. All Rights Reserved.</p>
-    </div>
+    <p>&copy; 2025 SHRI. All rights reserved.</p>
   </footer>
 
-  <script src="js/script.js"></script>
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+  </script>
 </body>
 </html>
