@@ -5,38 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SHRI — Home</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      background: linear-gradient(to right, #ff512f, #f09819); /* rising sun */
+      position: relative;
+    }
+    .logo img {
+      height: 50px;
+    }
+    .hamburger {
+      position: absolute;
+      right: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 25px;
+      height: 20px;
+    }
+    .hamburger span {
+      display: block;
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+    }
+    nav ul {
+      display: none; /* hidden, will show when hamburger is clicked */
+    }
+  </style>
 </head>
 <body>
 
   <!-- Header -->
   <header>
-    <div class="container header-container">
-      <a href="index.html" class="logo">
-        <img src="images/shriapp.png" alt="SHRI Logo" style="height:50px;">
-      </a>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="https://1sam1.github.io/login-page/">My Account</a></li>
-        </ul>
-        <div class="hamburger">
-          <span></span><span></span><span></span>
-        </div>
-      </nav>
+    <!-- Menu Button -->
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
     </div>
+    <!-- Centered Logo -->
+    <a href="index.html" class="logo">
+      <img src="images/shriapp.png" alt="SHRI Logo">
+    </a>
   </header>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Welcome to SHRI</h1>
-      <p>Your trusted partner in manpower services across Mumbai.</p>
-    </div>
-  </section>
 
   <!-- About Section -->
   <section class="about">
@@ -53,6 +67,11 @@
     </div>
   </footer>
 
-  <script src="js/script.js"></script>
+  <script>
+    function toggleMenu() {
+      alert("Here we will open the sidebar menu.");
+      // Later you can add sidebar code here
+    }
+  </script>
 </body>
 </html>
