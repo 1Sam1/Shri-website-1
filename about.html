@@ -1,65 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHRI — About Us</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 500px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  h2 { text-align: center; color: #333; }
+  label { display: block; margin-top: 10px; }
+  input {
+    width: 100%; padding: 8px; margin-top: 5px;
+    border: 1px solid #ccc; border-radius: 5px;
+  }
+  button {
+    width: 100%; padding: 10px;
+    background: #3498db; color: white; border: none;
+    border-radius: 5px; margin-top: 15px; cursor: pointer;
+  }
+  button:hover { background: #2980b9; }
+  #result {
+    display: none; margin-top: 20px;
+  }
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 15px;
+  }
+  th, td {
+    padding: 8px; border-bottom: 1px solid #ddd; text-align: center;
+  }
+  th { background: #f0f0f0; }
+  .error { color: red; text-align: center; margin-top: 10px; }
+  .total-box {
+    background: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+  }
+  .logout-btn {
+    background: #e74c3c;
+    margin-top: 20px;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <div class="container header-container">
-      <a href="index.html" class="logo">
-        <img src="images/shriapp.png" alt="SHRI Logo" style="height:50px;">
-      </a>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html" class="active">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="https://1sam1.github.io/login-page/">My Account</a></li>
-        </ul>
-        <div class="hamburger">
-          <span></span><span></span><span></span>
-        </div>
-      </nav>
-    </div>
-  </header>
+<div class="container" id="loginContainer">
+  <h2>Login</h2>
+  <label>Username</label>
+  <input type="text" id="username" placeholder="Enter username">
+  <label>Password</label>
+  <input type="password" id="password" placeholder="Enter password">
+  <button onclick="login()">Login</button>
+  <div class="error" id="errorMsg"></div>
+</div>
 
-  <!-- Hero -->
-  <section class="hero small-hero">
-    <div class="container">
-      <h2>About SHRI</h2>
-      <p>Committed to providing quality manpower across Mumbai and beyond.</p>
-    </div>
-  </section>
+<div class="container" id="result">
+  <h2>Welcome, <span id="name"></span></h2>
+  <p>Role: <strong id="role"></strong></p>
 
-  <!-- Content -->
-  <section class="about">
-    <div class="container">
-      <h2>Our Story</h2>
-      <p>SHRI was founded with a mission to bridge the gap between businesses and reliable manpower.</p>
-      <h3>Why Choose Us?</h3>
-      <ul>
-        <li>Trained and reliable staff</li>
-        <li>Flexible contracts</li>
-        <li>On-site supervision</li>
-        <li>Quick deployment</li>
-      </ul>
-    </div>
-  </section>
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Pali</th>
+        <th>Upad</th>
+        <th>Rate</th>
+        <th>Balance</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 SHRI. All Rights Reserved.</p>
-    </div>
-  </footer>
+  <div class="total-box">
+    <p><strong>Total Pali:</strong> <span id="totalPali"></span></p>
+    <p><strong>Total Upad:</strong> <span id="totalUpad"></span></p>
+    <p><strong>Total Balance:</strong> ₹<span id="totalBalance"></span></p>
+  </div>
 
-  <script src="js/script.js"></script>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTLdyByIkGxCAIw8k8FQD8E9Tsnbc3DYks0dNgEhJcRikon38lOsqb4ESJAOlC7HwJylivfI49wrG5A/pub?output=csv";
+let users = [];
+
+async function loadCSV() {
+  const response = await fetch(CSV_URL);
+  const text = await response.text();
+  const rows = text.trim().split("\n").map(r => r.split(","));
+  const headers = rows.shift().map(h => h.trim().toLowerCase());
+  users = rows.map(r => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = r[i]?.trim());
+    return obj;
+  });
+}
+
+async function login() {
+  if (!users.length) await loadCSV();
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorMsg = document.getElementById("errorMsg");
+
+  // find matching user credentials
+  const matched = users.filter(u =>
+    u.username?.toLowerCase() === username.toLowerCase() && u.password === password
+  );
+
+  if (!matched.length) {
+    errorMsg.textContent = "Invalid username or password.";
+    return;
+  }
+
+  errorMsg.textContent = "";
+  showUserData(matched);
+}
+
+function showUserData(userRecords) {
+  const user = userRecords[0]; // first record holds role/name etc.
+  document.getElementById("loginContainer").style.display = "none";
+  document.getElementById("result").style.display = "block";
+
+  document.getElementById("name").textContent = user.username;
+  document.getElementById("role").textContent = user.role;
+
+  const tbody = document.querySelector("#userTable tbody");
+  tbody.innerHTML = "";
+
+  let totalPali = 0, totalUpad = 0, totalBalance = 0;
+
+  userRecords.forEach((u, index) => {
+    const pali = parseFloat(u.pali) || 0;
+    const upad = parseFloat(u.upad) || 0;
+    const rate = parseFloat(u.rate) || 0;
+    const balance = pali * rate;
+
+    totalPali += pali;
+    totalUpad += upad;
+    totalBalance += balance;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${pali}</td>
+      <td>${upad}</td>
+      <td>${rate}</td>
+      <td>${balance.toFixed(2)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("totalPali").textContent = totalPali;
+  document.getElementById("totalUpad").textContent = totalUpad;
+  document.getElementById("totalBalance").textContent = totalBalance.toFixed(2);
+}
+
+function logout() {
+  document.getElementById("loginContainer").style.display = "block";
+  document.getElementById("result").style.display = "none";
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+}
+
+loadCSV(); // preload
+</script>
+
 </body>
 </html>
