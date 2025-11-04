@@ -1,53 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHRI — Coming Soon</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Account Login</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #ff512f, #f09819); /* rising sun */
-      color: white;
-      text-align: center;
-    }
-    .logo img {
-      height: 80px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin: 10px 0;
-    }
-    p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-    footer {
-      position: absolute;
-      bottom: 15px;
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
+    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
+    .login-container { max-width: 400px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 20px; width: 100%; padding: 10px; background: #007BFF; border: none; color: white; font-size: 16px; cursor: pointer; border-radius: 4px; }
+    button:hover { background: #0056b3; }
+    #accountDetails { margin-top: 25px; padding: 15px; background: #e9ffe9; border: 1px solid #a2d5a2; border-radius: 6px; display: none; }
   </style>
 </head>
 <body>
-  <div class="logo">
-    <img src="images/shriapp.png" alt="SHRI Logo">
+
+<div class="login-container">
+  <h2>Login to My Account</h2>
+  <form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" required />
+    <label for="password">Password:</label>
+    <input type="password" id="password" required />
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="accountDetails">
+    <h3>Account Details</h3>
+    <p><strong>Calculated Shifts:</strong> <span id="shifts"></span></p>
+    <p><strong>Advance:</strong> <span id="advance"></span></p>
+    <p><strong>Balance:</strong> <span id="balance"></span></p>
   </div>
-  <h1>Coming Soon</h1>
-  <p>Our website is under construction. Stay tuned!</p>
-  <footer>
-    &copy; 2025 SHRI. All Rights Reserved.
-  </footer>
+</div>
+
+<script>
+  // Example user data simulating CSV backend data
+  const users = [
+    { username: "user1", password: "pass1", shifts: 10, advance: 1000, balance: 500 },
+    { username: "user2", password: "pass2", shifts: 8, advance: 800, balance: 200 },
+    { username: "user3", password: "pass3", shifts: 15, advance: 1500, balance: 700 }
+    // Add more user objects as needed
+  ];
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    // Simple authentication check against the example data
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if(user) {
+      document.getElementById('shifts').textContent = user.shifts;
+      document.getElementById('advance').textContent = user.advance;
+      document.getElementById('balance').textContent = user.balance;
+      document.getElementById('accountDetails').style.display = 'block';
+      this.style.display = 'none'; // Hide login form after success
+    } else {
+      alert('Invalid username or password. Please try again.');
+    }
+  });
+</script>
+
 </body>
 </html>
