@@ -2,67 +2,215 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Account Login</title>
+  <title>Shri Work Portal</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
-    .login-container { max-width: 400px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input[type="text"], input[type="password"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-    button { margin-top: 20px; width: 100%; padding: 10px; background: #007BFF; border: none; color: white; font-size: 16px; cursor: pointer; border-radius: 4px; }
-    button:hover { background: #0056b3; }
-    #accountDetails { margin-top: 25px; padding: 15px; background: #e9ffe9; border: 1px solid #a2d5a2; border-radius: 6px; display: none; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+    }
+    .container {
+      max-width: 950px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2, h3 { text-align: center; color: #333; }
+    input, button, select {
+      padding: 10px; margin: 8px 0; width: 100%;
+      border-radius: 5px; border: 1px solid #ccc;
+    }
+    button { background: #3498db; color: white; border: none; cursor: pointer; }
+    button:hover { background: #2980b9; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f1f1f1; }
+    .hidden { display: none; }
+    .summary { margin-top: 20px; line-height: 1.8; }
+    .highlight { background: #f9f9f9; padding: 10px; border-radius: 6px; }
   </style>
 </head>
 <body>
-
-<div class="login-container">
-  <h2>Login to My Account</h2>
-  <form id="loginForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" required />
-    <label for="password">Password:</label>
-    <input type="password" id="password" required />
-    <button type="submit">Login</button>
-  </form>
-
-  <div id="accountDetails">
-    <h3>Account Details</h3>
-    <p><strong>Calculated Shifts:</strong> <span id="shifts"></span></p>
-    <p><strong>Advance:</strong> <span id="advance"></span></p>
-    <p><strong>Balance:</strong> <span id="balance"></span></p>
+  <div class="container" id="login-container">
+    <h1>Shri Work Portal</h1>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="login-msg" style="color:red;"></p>
   </div>
-</div>
 
-<script>
-  // Example user data simulating CSV backend data
-  const users = [
-    { username: "user1", password: "pass1", shifts: 10, advance: 1000, balance: 500 },
-    { username: "user2", password: "pass2", shifts: 8, advance: 800, balance: 200 },
-    { username: "user3", password: "pass3", shifts: 15, advance: 1500, balance: 700 }
-    // Add more user objects as needed
-  ];
+  <div class="container hidden" id="dashboard">
+    <h1 id="welcome"></h1>
+    <img id="photo" style="width:100px;height:100px;border-radius:50%;display:none;margin:auto;display:block;">
+    <div id="report-area">
+      <div class="summary" id="summary"></div>
+      <table id="detail-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    <div id="senior-tools" class="hidden">
+      <hr/>
+      <button onclick="downloadPDF()">📄 Download Full PDF</button>
+      <h3>Check Employee</h3>
+      <select id="employeeSelect"></select>
+      <button onclick="checkEmployee()">Check Employee</button>
+    </div>
+  </div>
 
-    // Simple authentication check against the example data
-    const user = users.find(u => u.username === username && u.password === password);
+  <script>
+    const regURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTLdyByIkGxCAIw8k8FQD8E9Tsnbc3DYks0dNgEhJcRikon38lOsqb4ESJAOlC7HwJylivfI49wrG5A/pub?output=csv";
+    const dailyURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTLdyByIkGxCAIw8k8FQD8E9Tsnbc3DYks0dNgEhJcRikon38lOsqb4ESJAOlC7HwJylivfI49wrG5A/pub?gid=1370536424&single=true&output=csv";
+    let registrations = [], daily = [], currentUser = null;
 
-    if(user) {
-      document.getElementById('shifts').textContent = user.shifts;
-      document.getElementById('advance').textContent = user.advance;
-      document.getElementById('balance').textContent = user.balance;
-      document.getElementById('accountDetails').style.display = 'block';
-      this.style.display = 'none'; // Hide login form after success
-    } else {
-      alert('Invalid username or password. Please try again.');
+    async function loadData() {
+      const [regText, dailyText] = await Promise.all([
+        fetch(regURL).then(r => r.text()),
+        fetch(dailyURL).then(r => r.text())
+      ]);
+      registrations = Papa.parse(regText, { header: true }).data;
+      daily = Papa.parse(dailyText, { header: true }).data;
     }
-  });
-</script>
 
+    async function login() {
+      if (registrations.length === 0) await loadData();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      const found = registrations.find(r =>
+        (r["A=employee"]?.trim() === user && r["B=Password"]?.trim() === pass) ||
+        (r["O=Customer"]?.trim() === user && r["X=password"]?.trim() === pass)
+      );
+
+      if (!found) {
+        document.getElementById("login-msg").innerText = "Invalid username or password.";
+        return;
+      }
+
+      currentUser = found;
+      document.getElementById("login-container").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      showDashboard(found);
+    }
+
+    function showDashboard(user) {
+      const name = user["A=employee"] || user["O=Customer"];
+      const role = (user["N=Role"] || "").toLowerCase();
+      const rate = parseFloat(user["D=rate"] || user["P=Rate"] || 0);
+      const lastBal = parseFloat(user["C=Last Month Balance"] || user["U=Last Month Balance"] || 0);
+      const photo = user["Y=Photo url"];
+      if (photo) { const img = document.getElementById("photo"); img.src = photo; img.style.display = "block"; }
+      document.getElementById("welcome").innerText = `Welcome, ${name} (${role})`;
+
+      let records = daily.filter(d =>
+        (role === "employee" || role === "senior") ? d["E:Name"]?.trim() === name :
+        role === "customer" ? d["G:Customer"]?.trim() === name : false
+      );
+
+      const lastClearIdx = records.findLastIndex(r => (r["F:Detail"]||"").toLowerCase().includes("clear"));
+      if (lastClearIdx !== -1) records = records.slice(lastClearIdx + 1);
+
+      let shifts = 0, advance = 0;
+      records.forEach(r => {
+        ["B:Morning","C:Evening","D:Night"].forEach(k => { if (r[k]) shifts++; });
+        advance += parseFloat(r["H:Payment"] || 0);
+      });
+      const balance = (shifts * rate + lastBal) - advance;
+
+      // Referral commissions
+      let referralEarnings = 0;
+      let referralList = "";
+
+      registrations.forEach(r => {
+        const empName = r["A=employee"];
+        const empRef = r["E=referral"];
+        const custName = r["O=Customer"];
+        const custRef = r["Q=Referral"];
+        // Employee referred
+        if (empRef === name) {
+          const empComm = parseFloat(r["F=commision"] || 0);
+          const empRecords = daily.filter(d => d["E:Name"]?.trim() === empName);
+          const clearIdx = empRecords.findLastIndex(x => (x["F:Detail"]||"").toLowerCase().includes("clear"));
+          const valid = clearIdx !== -1 ? empRecords.slice(clearIdx + 1) : empRecords;
+          let empShifts = 0; valid.forEach(v => ["B:Morning","C:Evening","D:Night"].forEach(k => { if (v[k]) empShifts++; }));
+          referralEarnings += empShifts * empComm;
+          referralList += `<li>${empName}: ${empShifts} shifts × ₹${empComm} = ₹${(empShifts * empComm).toFixed(2)}</li>`;
+        }
+        // Customer referred
+        if (custRef === name) {
+          const custComm = parseFloat(r["R=commision"] || 0);
+          const custRecords = daily.filter(d => d["G:Customer"]?.trim() === custName);
+          const clearIdx = custRecords.findLastIndex(x => (x["F:Detail"]||"").toLowerCase().includes("clear"));
+          const valid = clearIdx !== -1 ? custRecords.slice(clearIdx + 1) : custRecords;
+          let custShifts = 0; valid.forEach(v => ["B:Morning","C:Evening","D:Night"].forEach(k => { if (v[k]) custShifts++; }));
+          referralEarnings += custShifts * custComm;
+          referralList += `<li>${custName}: ${custShifts} shifts × ₹${custComm} = ₹${(custShifts * custComm).toFixed(2)}</li>`;
+        }
+      });
+
+      const summaryHTML = `
+        <div class="highlight">
+          <p><b>Total Shifts:</b> ${shifts}</p>
+          <p><b>Total Advance:</b> ₹${advance.toFixed(2)}</p>
+          <p><b>${role === "customer" ? "Bill" : "Balance"}:</b> ₹${balance.toFixed(2)}</p>
+          <p><b>Last Month Balance:</b> ₹${lastBal.toFixed(2)}</p>
+          ${referralEarnings > 0 ? `<p><b>Referral Commission Earned:</b> ₹${referralEarnings.toFixed(2)}</p><ul>${referralList}</ul>` : ""}
+        </div>`;
+      document.getElementById("summary").innerHTML = summaryHTML;
+
+      // Table
+      const thead = document.querySelector("#detail-table thead");
+      const tbody = document.querySelector("#detail-table tbody");
+      thead.innerHTML = "<tr><th>Date</th><th>Shifts</th><th>Venue</th><th>Customer</th><th>Advance</th></tr>";
+      tbody.innerHTML = "";
+      records.forEach(r => {
+        const shiftsList = ["Morning","Evening","Night"].filter(s => r[`B:${s}`] || r[`C:${s}`] || r[`D:${s}`]);
+        const row = `<tr>
+          <td>${r["A:Date"]||""}</td>
+          <td>${shiftsList.join(", ")}</td>
+          <td>${r["F:Detail"]||""}</td>
+          <td>${r["G:Customer"]||""}</td>
+          <td>${r["H:Payment"]||""}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+
+      if (role === "senior") {
+        const tools = document.getElementById("senior-tools");
+        tools.classList.remove("hidden");
+        const sel = document.getElementById("employeeSelect");
+        sel.innerHTML = "<option value=''>Select Employee</option>" +
+          registrations.filter(r => (r["N=Role"]||"").toLowerCase()==="employee")
+          .map(r => `<option value="${r["A=employee"]}">${r["A=employee"]}</option>`).join("");
+      }
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const report = document.getElementById("report-area");
+      const doc = new jsPDF("p","pt","a4");
+      await html2canvas(report, { scale: 2 }).then(canvas => {
+        const img = canvas.toDataURL("image/png");
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * pageWidth) / canvas.width;
+        doc.addImage(img, "PNG", 0, 0, pageWidth, imgHeight);
+      });
+      const fileName = `${currentUser["A=employee"]||currentUser["O=Customer"]}_Report.pdf`;
+      doc.save(fileName);
+    }
+
+    function checkEmployee() {
+      const emp = document.getElementById("employeeSelect").value;
+      if (!emp) return alert("Select an employee");
+      const empRec = registrations.find(r => r["A=employee"] === emp);
+      if (empRec) showDashboard(empRec);
+    }
+  </script>
 </body>
 </html>
